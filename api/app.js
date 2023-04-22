@@ -5,7 +5,8 @@ const bodyparser = require("body-parser");
 const methodOverride = require("method-override");
 
 
-dotenv.config({ path: "./config/.env" });
+dotenv.config({ path: `${__dirname}/config/.env` });
+const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -17,6 +18,10 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+try {
+  app.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
+  });
+} catch (err) {
+  console.error(`Error starting server: ${err}`);
+}
