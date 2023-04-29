@@ -42,8 +42,15 @@ else
         if [ $(docker images -q $DOCKER_IMAGE_NAME) ]; then
             echo "The Docker image $DOCKER_IMAGE_NAME has already been built."
         else
-            # Build the Docker image
-            docker build -t $DOCKER_IMAGE_NAME .
+            # Check if Dockerfile exists in the same directory as the docker-compose.yml file
+            DOCKERFILE_PATH=$(dirname "$(realpath docker-compose.yml)")"/$DOCKER_IMAGE_NAME"
+            if [ ! -f "$DOCKERFILE_PATH/Dockerfile" ]; then
+                echo "Error: the Dockerfile for $DOCKER_IMAGE_NAME cannot be found in $DOCKERFILE_PATH. Please make sure the file exists."
+                exit
+            fi
+
+            # Build the Docker image in the directory where the Dockerfile is located
+            docker build -t $DOCKER_IMAGE_NAME $DOCKERFILE_PATH
         fi
     done
     
