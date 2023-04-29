@@ -6,14 +6,14 @@ declare -a DOCKER_IMAGE_NAMES=("<docker-image-name-1>" "<docker-image-name-2>" "
 # Check if Docker is installed and running
 if ! command -v docker &> /dev/null
 then
-    echo "Error: Docker is not installed or running. Please install Docker and start it before continuing."
+    echo -e "\e[31m Error: Docker is not installed or running. Please install Docker and start it before continuing. \e[0m"
     exit
 fi
 
 # Check if Docker Compose is installed
 if ! command -v docker-compose &> /dev/null
 then
-    echo "Error: Docker Compose is not installed. Please install Docker Compose before continuing."
+    echo -e "\e[31m Error: Docker Compose is not installed. Please install Docker Compose before continuing. \e[0m"
     exit
 fi
 
@@ -21,18 +21,18 @@ fi
 for DOCKER_IMAGE_NAME in "${DOCKER_IMAGE_NAMES[@]}"
 do
     if [ $(docker ps -q -f ancestor=$DOCKER_IMAGE_NAME) ]; then
-        echo "A Docker container is already running for the image $DOCKER_IMAGE_NAME."
+        echo -e "\e[33m A Docker container is already running for the image $DOCKER_IMAGE_NAME. \e[0m"
         exit
     fi
 done
 
 # Check if the Docker Compose is already running
 if [ $(docker-compose ps -q) ]; then
-    echo "The Docker Compose is already running."
+    echo -e "\e[32m The Docker Compose is already running. \e[0m"
 else
     # Check if the docker-compose.yml file exists
     if [ ! -f docker-compose.yml ]; then
-        echo "Error: the docker-compose.yml file cannot be found. Please make sure the file exists in the current directory."
+        echo -e "\e[31m Error: the docker-compose.yml file cannot be found. Please make sure the file exists in the current directory. \e[0m"
         exit
     fi
     
@@ -40,12 +40,12 @@ else
     for DOCKER_IMAGE_NAME in "${DOCKER_IMAGE_NAMES[@]}"
     do
         if [ $(docker images -q $DOCKER_IMAGE_NAME) ]; then
-            echo "The Docker image $DOCKER_IMAGE_NAME has already been built."
+            echo -e "\e[33m The Docker image $DOCKER_IMAGE_NAME has already been built. \e[0m"
         else
             # Check if Dockerfile exists in the same directory as the docker-compose.yml file
             DOCKERFILE_PATH=$(dirname "/home/user/projects/myapp")"/$DOCKER_IMAGE_NAME"
             if [ ! -f "$DOCKERFILE_PATH/Dockerfile" ]; then
-                echo "Error: the Dockerfile for $DOCKER_IMAGE_NAME cannot be found in $DOCKERFILE_PATH. Please make sure the file exists."
+                echo -e "\e[31m Error: the Dockerfile for $DOCKER_IMAGE_NAME cannot be found in $DOCKERFILE_PATH. Please make sure the file exists. \e[0m"
                 exit
             fi
 
@@ -56,5 +56,5 @@ else
     
     # Start the Docker Compose
     docker-compose up -d
-    echo "The Docker Compose has been successfully launched for the specified Docker images."
+    echo -e "\e[32m The Docker Compose has been successfully launched for the specified Docker images. \e[0m"
 fi
