@@ -12,17 +12,6 @@ const partSchema = new Schema({
     }
 });
 
-const cashSchema = new Schema({
-    amount: {
-        type: Number,
-        required: true
-    },
-    date: {
-        type: String,
-        required: true
-    }
-});
-
 const salesFileSchema = new Schema({
     contractNumber: {
         type: Number,
@@ -37,12 +26,19 @@ const salesFileSchema = new Schema({
         required: true
     },
     cash: {
-        type: [cashSchema],
+        type: [Number],
         required: true
     },
     date: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: (value) => {
+                const regex = /^\d{2}-\d{2}-\d{4}$/;
+                return regex.test(value);
+            },
+            message: 'Invalid date format'
+        }
     }
 });
 

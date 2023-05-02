@@ -8,7 +8,14 @@ const priceSchema = new Schema({
     },
     date: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: (value) => {
+                const regex = /^\d{2}-\d{2}-\d{4}$/;
+                return regex.test(value);
+            },
+            message: 'Invalid date format'
+        }
     }
 });
 
