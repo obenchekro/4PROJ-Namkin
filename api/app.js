@@ -5,7 +5,6 @@ const connectDB = require("./config/db");
 const bodyparser = require("body-parser");
 const methodOverride = require("method-override");
 
-
 dotenv.config({ path: `${__dirname}/config/.env` });
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
