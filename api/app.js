@@ -20,9 +20,11 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-const authRouter = require('./routes/authentificationUser');
+const authRouter = require('./routes/authentificationUserRouter');
+const userRouter = require('./routes/userRouter');
 
-app.use('/v1/auth', authRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/user', userRouter);
 
 try {
   app.listen(PORT, HOST, () => {

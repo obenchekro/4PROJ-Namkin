@@ -7,7 +7,7 @@ function generateAccessToken(user) {
     };
     const secret = process.env.ACCESS_TOKEN_SECRET;
     const options = {
-        expiresIn: process.env.SECRET_TOKEN_DURATION,
+        expiresIn: process.env.SECRET_TOKEN_DURATION * 60,
     };
     return jwt.sign(payload, secret, options);
 }
@@ -22,7 +22,7 @@ function authenticateToken(req, res, next) {
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) {
-            return res.sendStatus(403);
+            return res.sendStatus(403).send("Invalid token, you're not authentifying with the right access.");
         }
         req.user = user;
         return next();
