@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const connectDB = require("../config/db");
+const dotenv = require("dotenv");
+dotenv.config({ path: '../config/.env' });
+const MONGO_URI = process.env.MONGO_URI
+connectDB(MONGO_URI)
 const partInformationSchema = new Schema({
     id: {
         type: Number,

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -50,11 +51,15 @@ userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         return next();
     }
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(this.password, salt);
-    this.password = hash;
-    next();
+    try {
+        const saltRounds = 10;
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hash = await bcrypt.hash(this.password, salt);
+        this.password = hash;
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 const User = mongoose.model('User', userSchema);

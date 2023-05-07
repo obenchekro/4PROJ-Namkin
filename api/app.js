@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-const bodyparser = require("body-parser");
+const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 
 dotenv.config({ path: `${__dirname}/config/.env` });
@@ -15,9 +15,14 @@ connectDB(MONGO_URI)
 
 app.use(express.json());
 app.use(methodOverride("_method"));
-app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
+const authRouter = require('./routes/authentificationUser');
+
+app.use('/v1/auth', authRouter);
 
 try {
   app.listen(PORT, HOST, () => {
