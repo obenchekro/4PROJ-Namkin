@@ -3,8 +3,7 @@ const jwt = require('jsonwebtoken');
 function generateAccessToken(user) {
     const payload = {
         _id: user._id,
-        email: user.email,
-        name: user.name,
+        is_admin: user.is_admin,
     };
     const secret = process.env.ACCESS_TOKEN_SECRET;
     const options = {
@@ -47,10 +46,9 @@ function loginWithToken(bearerToken) {
             resolve({
                 user: {
                     id: user._id,
-                    email: user.email,
-                    name: user.name,
+                    is_admin: user.email,
                 },
-                token: token,
+                whichUser: decodedValue,
             });
         });
     });

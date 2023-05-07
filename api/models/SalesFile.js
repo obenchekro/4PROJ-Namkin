@@ -34,8 +34,14 @@ const salesFileSchema = new Schema({
         required: true,
         validate: {
             validator: (value) => {
-                const regex = /^\d{2}-\d{2}-\d{4}$/;
-                return regex.test(value);
+                const regex = /^(\d{2})-(\d{2})-(\d{4})$/;
+                const match = value.match(regex);
+                if (!match) return false;
+
+                const [_, month, day, year] = match;
+                const date = new Date(year, month - 1, day);
+
+                if (date.getFullYear() != year || date.getMonth() != month - 1 || date.getDate() != day) return false;
             },
             message: 'Invalid date format'
         }
