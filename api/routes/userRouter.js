@@ -6,6 +6,7 @@ const jwt = require('../middleware/authentificationToken');
 router.get('/', jwt.authenticateToken, userController.getAllUsers);
 router.get('/:id', jwt.authenticateToken, userController.getUserById);
 router.post('/', jwt.authenticateToken, userController.createUser);
+router.post('/many-users', jwt.authenticateToken, userController.createManyUsers)
 router.delete('/:id', jwt.authenticateToken, userController.deleteUserById);
 router.patch('/:id/username', jwt.authenticateToken, userController.updateUsernameById);
 router.patch('/:id/first-name', jwt.authenticateToken, userController.updateFirstNameById);

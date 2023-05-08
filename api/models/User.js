@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     firstName: {
         type: String,
@@ -35,7 +36,7 @@ const userSchema = new Schema({
         minlength: 6,
         validate: {
             validator: (value) => {
-                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])[a-zA-Z\d\S]{6,}$/;
                 return regex.test(value);
             },
             message: 'Invalid password format'
@@ -52,16 +53,20 @@ userSchema.pre('save', async function (next) {
         return next();
     }
     try {
-        const saltRounds = 10;
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hash = await bcrypt.hash(this.password, salt);
-        this.password = hash;
+        this.password = await hashPassword(this.password);
         next();
     } catch (error) {
         next(error);
     }
 });
 
+const hashPassword = async (password) => {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
+}
+
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = { User, hashPassword };
