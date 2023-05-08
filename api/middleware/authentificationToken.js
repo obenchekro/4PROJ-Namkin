@@ -41,7 +41,7 @@ function loginWithToken(bearerToken) {
             if (err) {
                 reject(new Error(err));
             }
-            resolve(resolve(decodedValue));
+            resolve(decodedValue);
         });
     });
 }
