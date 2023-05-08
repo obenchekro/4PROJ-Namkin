@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -36,7 +35,7 @@ const userSchema = new Schema({
         minlength: 6,
         validate: {
             validator: (value) => {
-                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])[a-zA-Z\d\S]{6,}$/;
+                const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s])[a-zA-Z\d\S]{6,}$/;;
                 return regex.test(value);
             },
             message: 'Invalid password format'

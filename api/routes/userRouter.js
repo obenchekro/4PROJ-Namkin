@@ -8,6 +8,7 @@ router.get('/:id', jwt.authenticateToken, userController.getUserById);
 router.post('/', jwt.authenticateToken, userController.createUser);
 router.post('/many-users', jwt.authenticateToken, userController.createManyUsers)
 router.delete('/:id', jwt.authenticateToken, userController.deleteUserById);
+router.delete('/', jwt.authenticateToken, userController.deleteManyUsers);
 router.patch('/:id/username', jwt.authenticateToken, userController.updateUsernameById);
 router.patch('/:id/first-name', jwt.authenticateToken, userController.updateFirstNameById);
 router.patch('/:id/last-name', jwt.authenticateToken, userController.updateLastNameById);
