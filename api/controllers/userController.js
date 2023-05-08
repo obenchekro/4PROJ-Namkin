@@ -54,7 +54,6 @@ const createUser = async (req, res) => {
                 res.status(400).json({ message: "User with that email already exists", status: "Error" });
             } else {
                 res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.', status: "Error" });
-                console.log(error);
             }
         }
     }
