@@ -8,7 +8,7 @@ const getAuthentificationToken = async (req, res) => {
         if (!req.body.username || !req.body.password) return res.status(400).json({ message: 'Username and password are required' });
         const user = await User.findOne({ username: req.body.username });
         if (!user && typeof user !== typeof object) return res.status(400).json({ message: 'Username or password is incorrect' });
-        
+
         bcrypt.compare(req.body.password, user.password, (err, match) => {
             if (err) console.log(err);
             if (!match) {
@@ -31,7 +31,7 @@ const getAuthentificationToken = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.' });
+        res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.', status: "Error" });
     }
 };
 
