@@ -430,7 +430,7 @@ const updateUserIsAdminById = async (req, res) => {
             return res.status(404).json({ message: 'User not found', status: "Error" });
         }
 
-        if (req.user._id.toString() !== userFetched._id.toString()) {
+        if (req.user._id.toString() === userFetched._id.toString()) {
             return res.status(400).json({ message: "You're administrator and you cannot modify your own role yourself.", status: "Error" });
         }
 
