@@ -30,7 +30,8 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const decodedPayload = await loginWithToken(req.headers['authorization']);
+        const authHeader = req.headers['authorization'];
+        const decodedPayload = await loginWithToken(authHeader);
         const fetchUser = await User.findOne({ _id: decodedPayload._id });
 
         if (!fetchUser && typeof user !== typeof object) {
