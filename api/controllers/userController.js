@@ -93,8 +93,12 @@ const createManyUsers = async (req, res) => {
         }
         else {
             if (error.code === 11000 && error.message.includes('duplicate key error')) {
-                res.status(400).json({ message: "User with that username or email already exists", status: "Error" });
-            } else {
+                return res.status(400).json({ message: "User with that username or email already exists", status: "Error" });
+            }
+            if (error.name === 'TypeError' && error.message.includes("iterable")) {
+                return res.status(400).json({ message: "You must create an array of users.", status: "Error" });
+            }
+            else {
                 res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.', status: "Error" });
             }
         }
@@ -158,7 +162,12 @@ const deleteManyUsers = async (req, res) => {
         res.status(200).json({ message: "Users successfully deleted", status: "Success", users });
 
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.', status: "Error" });
+        if (error.name === 'TypeError' && error.message.includes("req.body.map")) {
+            return res.status(400).json({ message: "You must delete an array of users.", status: "Error" });
+        }
+        else {
+            res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.', status: "Error" });
+        }
     }
 };
 
@@ -185,7 +194,7 @@ const updateUsernameById = async (req, res) => {
 
     try {
         const userFetched = await User.findById(req.params.id);
-        if (!userFetched && typeof userFetched !== typeof object && req.user._id.toString() !== userFetched._id.toString()) {
+        if (!userFetched && typeof userFetched !== typeof object) {
             return res.status(404).json({ message: 'User not found', status: "Error" });
         }
         const user = await User.findOneAndUpdate(
@@ -204,6 +213,7 @@ const updateUsernameById = async (req, res) => {
             if (error.code === 11000 && error.message.includes('duplicate key error')) {
                 res.status(400).json({ message: "That username already exists.", status: "Error" });
             } else {
+                console.log(error);
                 res.status(500).json({ message: 'Internal Server Error, we might patch up all of this occasional error later on.', status: "Error" });
             }
         }
@@ -233,7 +243,7 @@ const updateFirstNameById = async (req, res) => {
 
     try {
         const userFetched = await User.findById(req.params.id);
-        if (!userFetched && typeof userFetched !== typeof object && req.user._id.toString() !== userFetched._id.toString()) {
+        if (!userFetched && typeof userFetched !== typeof object) {
             return res.status(404).json({ message: 'User not found', status: "Error" });
         }
         const user = await User.findOneAndUpdate(
@@ -275,7 +285,7 @@ const updateLastNameById = async (req, res) => {
 
     try {
         const userFetched = await User.findById(req.params.id);
-        if (!userFetched && typeof userFetched !== typeof object && req.user._id.toString() !== userFetched._id.toString()) {
+        if (!userFetched && typeof userFetched !== typeof object) {
             return res.status(404).json({ message: 'User not found', status: "Error" });
         }
         const user = await User.findOneAndUpdate(
@@ -317,7 +327,7 @@ const updateUserEmailById = async (req, res) => {
 
     try {
         const userFetched = await User.findById(req.params.id);
-        if (!userFetched && typeof userFetched !== typeof object && req.user._id.toString() !== userFetched._id.toString()) {
+        if (!userFetched && typeof userFetched !== typeof object) {
             return res.status(404).json({ message: 'User not found', status: "Error" });
         }
         const emailValidator = User.schema.path('email').validators.find(v => v.validator.name === 'validator');
@@ -373,7 +383,7 @@ const updateUserPasswordById = async (req, res) => {
 
     try {
         const userFetched = await User.findById(req.params.id);
-        if (!userFetched && typeof userFetched !== typeof object && req.user._id.toString() !== userFetched._id.toString()) {
+        if (!userFetched && typeof userFetched !== typeof object) {
             return res.status(404).json({ message: 'User not found', status: "Error" });
         }
         const passwordValidator = User.schema.path('password').validators.find(v => v.validator.name === 'validator');
